@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Sadaq Taxi — Генерация Kaspi QR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Библиотека генерации QR -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(180deg, #0b0b0b, #111);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 420px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .logo {
+    width: 180px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  p {
+    opacity: 0.7;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .input {
+    width: 100%;
+    padding: 16px;
+    font-size: 20px;
+    border-radius: 14px;
+    border: none;
+    text-align: center;
+    outline: none;
+    margin-bottom: 18px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 18px;
+    border-radius: 16px;
+    border: none;
+    background: #f5c518;
+    color: black;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  #qrcode {
+    margin-top: 25px;
+    background: white;
+    padding: 15px;
+    border-radius: 16px;
+    display: inline-block;
+  }
+
+  .note {
+    margin-top: 15px;
+    font-size: 12px;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- ЛОГОТИП -->
+  <img src="sadaq_taxi_logo.png" class="logo" alt="Sadaq Taxi">
+
+  <h1>Генерация Kaspi QR</h1>
+  <p>Введите номер водителя</p>
+
+  <input
+    type="tel"
+    id="phone"
+    class="input"
+    placeholder="+7XXXXXXXXXX"
+    maxlength="12"
+    oninput="formatPhone(this)"
+  />
+
+  <button class="btn" onclick="generateQR()">Сгенерировать QR</button>
+
+  <div id="qrcode"></div>
+
+  <div class="note">
+    QR откроет оплату Sadaq Taxi в Kaspi
+  </div>
+</div>
+
+<script>
+function formatPhone(input) {
+  let value = input.value.replace(/\D/g, '');
+
+  if (value.startsWith('8')) {
+    value = '7' + value.slice(1);
+  }
+
+  if (!value.startsWith('7')) {
+    value = '7' + value;
+  }
+
+  input.value = '+' + value;
+}
+
+function generateQR() {
+  let phone = document.getElementById("phone").value.replace(/\D/g, '');
+
+  if (phone.length !== 11) {
+    alert("Введите номер в формате +7XXXXXXXXXX");
+    return;
+  }
+
+  let url = "https://kaspi.kz/pay/SadaqTaxi?18748=" + phone;
+
+  document.getElementById("qrcode").innerHTML = "";
+  new QRCode(document.getElementById("qrcode"), {
+    text: url,
+    width: 220,
+    height: 220
+  });
+}
+</script>
+
+</body>
+</html>
